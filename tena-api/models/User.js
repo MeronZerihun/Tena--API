@@ -5,11 +5,11 @@ let Schema = mongoose.Schema;
 let userSchema = new Schema({
         createdAt: {type: Date, default: Date.now}, 
         modifiedAt: {type: Date, default: Date.now},
-        fullName: String,
-        phoneNumber: String,
-        email: String,
-        password: String,
-        role: String
+        fullName: {type: String, required: true},
+        phoneNumber: {type: String, required: true},
+        email: {type: String, required: true},
+        password: {type: String, required: true},
+        role: {type: String, required: true}
     }
 );
 
