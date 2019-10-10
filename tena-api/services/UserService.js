@@ -36,7 +36,7 @@ exports.findByUsername = function(username, returnFn){
 }
 
 exports.updateAUser = function(id, newUser, returnFn){
-    User.findByIdAndUpdate({_id: id}, newUser, function(err, result){
+    User.findByIdAndUpdate({_id: id}, newUser,{new: true}, function(err, result){
         if(err) 
             return returnFn(err); 
         returnFn(result); 
