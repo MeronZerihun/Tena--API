@@ -44,7 +44,7 @@ exports.rateRequest = function(requestId, userId, returnFn){
                     FundRequest.updateOne({_id: requestId}, {rateAmount: result.rateAmount + 1}, {new: true}, function(err){
                         if(err)
                             return returnFn(err);
-                        returnFn({message: 'Requested rated'});
+                        returnFn({message: 'Request has been rated'});
                     });
                 }
             });
