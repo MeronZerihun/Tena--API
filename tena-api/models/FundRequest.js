@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 
 let requestSchema = new Schema({
-    requestedAt: {type: Date, required: true},
+    requestedAt: {type: Date, default: Date.now},
     age: {type: String, required: true},
     gender : {type: String, required: true},
     maritalStatus: {type: String, required: true},

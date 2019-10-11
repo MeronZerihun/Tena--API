@@ -56,7 +56,8 @@ exports.loginUser = function(req, res, next){
 }
 
 exports.updateUser = function(req,res, next){
-    let user = req.body;
+    var user = req.body;
+    user.modifiedAt = Date.now;
     UserService.updateAUser(req.params.id, user, (result)=>{
         res.status(res.statusCode).json(result);
     });
