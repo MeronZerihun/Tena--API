@@ -58,3 +58,19 @@ exports.loginUser = function(email, password, returnFn){
         }
     })
 }
+
+exports.blockUser = function(userId, returnFn){
+    User.findByIdAndUpdate({_id: userId}, {status: 'blocked'}, {new: true}, function(err, result){
+        if(err)
+            return returnFn(err);
+        returnFn(result);
+    })
+}
+
+exports.findUserById = function(id, returnFn){
+    User.findById(id, function(err, result){
+        if(err)
+            return returnFn({error: err});
+        returnFn({success: 'User found'});
+    })
+}

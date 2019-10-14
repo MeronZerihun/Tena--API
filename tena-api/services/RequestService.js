@@ -1,5 +1,6 @@
 const FundRequest = require('../models/FundRequest');
 const Rate = require('../models/Rate');
+const UserService = require('../services/UserService');
 
 exports.getRequestsByStatus = function(status, returnFn){
     FundRequest.find({status: status}, function(err, results){
@@ -18,17 +19,26 @@ exports.getAllRequests = function(returnFn){
 }
 
 // might be interested in suggestion
-exports.getRequestsByDescription = function(){
-
-}
-
-exports.createRequest = function(age, gender, martialStatus, description, photo, verificationFile, patientId, returnFn){
-    let request = new FundRequest({age: age, gender: gender, martialStatus: martialStatus, description: description, photo: photo, verificationFile: verificationFile, patientId: patientId});
-    request.save(function(err, result){
+exports.getRequestsByDiagnosis = function(diagnosis, returnFn){
+    FundRequest.find({diagnosis: diagnosis}, function(err, results){
         if(err)
             return returnFn(err);
-        returnFn(result);
+        returnFn(results);
     });
+}
+
+exports.createRequest = function(age, gender, cost, martialStatus, description, photo, diagnosis, verificationFile, patientId, returnFn){
+    UserService.findUserById(patientId, (result)=>{
+        if(!result.error){
+            let request = new FundRequest({age: age, gender: gender, martialStatus: martialStatus, diagnosis: diagnosis, description: description, photo: photo, verificationFile: verificationFile, recoveryCost: cost, patientId: patientId});
+            request.save(function(err, result){
+            if(err)
+                return returnFn(err);
+            returnFn(result);
+    });
+        }
+    })
+    
 }
 
 exports.rateRequest = function(requestId, userId, returnFn){
@@ -68,8 +78,8 @@ exports.updateStatus = function(requestId, status, returnFn){
     });
 }
 
-exports.updateRequest = function(requestId, age, gender, martialStatus, description, photo, verificationFile, returnFn){
-    FundRequest.findByIdAndUpdate({_id: requestId}, {age: age, gender: gender, martialStatus: martialStatus, description: description, photo: photo, verificationFile: verificationFile}, {new: true}, function(err, result){
+exports.updateRequest = function(requestId, age, gender, martialStatus, diagnosis, description, photo, verificationFile, returnFn){
+    FundRequest.findByIdAndUpdate({_id: requestId}, {age: age, gender: gender, martialStatus: martialStatus, diagnosis: diagnosis, description: description, photo: photo, verificationFile: verificationFile}, {new: true}, function(err, result){
         if(err)
             return returnFn(err);
         returnFn(result);
@@ -82,4 +92,19 @@ exports.deleteRequest = function(requestId, returnFn){
                 return returnFn(err);
             returnFn(result);
     });
+}
+
+exports.getRequestByPatient = function(patientId, returnFn){
+    FundRequest.find({patientId: patientId}, function(err, results){
+        if(err)
+            return returnFn(err);
+        returnFn(results);
+    })
+}
+exports.getRequestById = function(id, returnFn){
+    FundRequest.find({_id: id}, function(err, results){
+        if(err)
+            return returnFn({error: err});
+        returnFn({success: 'Request found'});
+    })
 }

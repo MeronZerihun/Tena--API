@@ -1,9 +1,9 @@
 const Bank = require('../models/Bank');
 
-exports.debitAmount = function(amount, account, returnFn){
-    Bank.find({accountNumber: account}, function(err, result){
+exports.debitAmount = function(type, amount, account, returnFn){
+    Bank.find({accountNumber: account, type: type}, function(err, result){
         if(err)
-            return returnFn(err);
+            return returnFn({error: err});
         else{
             console.log(result)
             if(result[0].deposit < amount)
