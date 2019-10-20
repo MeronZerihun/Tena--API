@@ -8,12 +8,13 @@ let requestSchema = new Schema({
     gender : {type: String, required: true},
     maritalStatus: {type: String, required: true},
     description: {type: String, required: true},
-    photo: {data: Buffer, contentType: String, required: true},
+    photo: {type: String, required: true},
     diagnosis: {type: String, required: true},
-    verificationFile: {data: Buffer, contentType: String, required: true},
+    verificationFile: {type: String, required: true},
     recoveryCost: {type: Number, required: true},
-    status: {type: String, default: 'accepted'},
+    status: {type: String, default: 'pending'},
     progress: {type: Number, default: 0},
+    progressPercent: {type: Number, default: 0},
     rateAmount: {type: Number, default: 0},
     patientId: {type: Schema.Types.ObjectId, ref: 'User', required: true}
 });

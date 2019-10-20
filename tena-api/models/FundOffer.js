@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 
 let fundOfferSchema = new Schema({
-    offeredAt: {type: Date, default: Date.now()},
+    createdAt: {type: Date, default: Date.now()},
     accountNumber: {type: String, required: true},
     paymentOption: {type: String, required: true},
     fundAmount: {type: Number, required: true},
