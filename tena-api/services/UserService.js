@@ -65,15 +65,15 @@ exports.findUserById = function(id, returnFn){
     User.find({_id: id}, function(err, result){
         if(err)
             return returnFn({error: err});
-        else if(result)
-                return returnFn({success: 'User found'});
+        else if(result.length > 0)
+            return returnFn({success: 'User found'});
         returnFn({error: 'User not found'});
         
     })
 }
 
 exports.findUserByName = function(name, returnFn){
-    User.find({fullName: {$regex:`${name}*`,$options:'i'}}, function(err, result){
+    User.find({fullName: {$regex:`${name}*`, $options:'i'}}, function(err, result){
         if(err)
             return returnFn({error: err});
         else if(result)

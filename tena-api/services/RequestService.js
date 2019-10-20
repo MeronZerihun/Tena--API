@@ -1,6 +1,6 @@
 const FundRequest = require('../models/FundRequest');
 const Rate = require('../models/Rate');
-const UserService = require('../services/UserService');
+const UserService = require('./UserService');
 
 
 exports.createRequest = function(age, gender, cost, maritalStatus, description, photo, diagnosis, verificationFile, patientId, returnFn){
@@ -202,7 +202,9 @@ exports.getRequestById = function(id, returnFn){
     FundRequest.find({_id: id}, function(err, results){
         if(err)
             return returnFn({error: err});
-        returnFn({success: 'Request found'});
+        else if(results.length > 0)
+            return returnFn({success: 'Request found'});
+        returnFn({error: 'No request found'});
     })
 }
 

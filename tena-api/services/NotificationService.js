@@ -1,4 +1,4 @@
-const Rate = require('../services/RequestService');
+const Rate = require('../models/Rate');
 const FundOffer = require('../models/FundOffer');
 
 exports.getNotifications = function(returnFn){
@@ -12,7 +12,7 @@ exports.getNotifications = function(returnFn){
                 else{
                     let offersAndRates = offers.concat(rates);
                     offersAndRates.sort((a,b)=>(a.createdAt > b.createdAt) ? 1 : -1); 
-                    returnFn({offers: offers, rates: rates});
+                    returnFn({offersAndRates: offersAndRates});
                 }
             })
         }
