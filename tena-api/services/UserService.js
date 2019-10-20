@@ -11,8 +11,10 @@ exports.findAllUsers = function (returnFn){
 
 exports.findUsersByRole = function (role, returnFn){
     User.find({role: role}, function(err, res){
-        if(err)
+        if(err){
+            console.log(err);
             return returnFn(err);
+        }
         returnFn(res);
     })
 }
@@ -25,14 +27,6 @@ exports.insertUser = function (fullName, email, phoneNo, password, role, returnF
         returnFn(res);
     });
     
-}
-exports.findByUsername = function(username, returnFn){
-    User.find({fullName: username},function(err, res){
-        if(err)
-            return returnFn(err);
-        returnFn(res);
-    });
-
 }
 
 exports.updateAUser = function(id, newUser, returnFn){
@@ -53,7 +47,7 @@ exports.loginUser = function(email, password, returnFn){
                 if(err)
                     returnFn(err);
                 else
-                    returnFn({message: 'Login Success'});
+                    returnFn(res);
             })
         }
     })
@@ -68,9 +62,22 @@ exports.blockUser = function(userId, returnFn){
 }
 
 exports.findUserById = function(id, returnFn){
-    User.findById(id, function(err, result){
+    User.find({_id: id}, function(err, result){
         if(err)
             return returnFn({error: err});
-        returnFn({success: 'User found'});
+        else if(result)
+                return returnFn({success: 'User found'});
+        returnFn({error: 'User not found'});
+        
+    })
+}
+
+exports.findUserByName = function(name, returnFn){
+    User.find({fullName: {$regex:`${name}*`,$options:'i'}}, function(err, result){
+        if(err)
+            return returnFn({error: err});
+        else if(result)
+            return returnFn(result);
+        returnFn({error: 'User not found'});
     })
 }

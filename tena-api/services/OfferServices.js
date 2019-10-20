@@ -25,7 +25,7 @@ exports.offerFund = function(bankType, amount, accountNo, requestId, providerId,
    
 }
 
-exports.getOffersAndUpdateProgress = function(requestId, returnFn){
+/*exports.getOffersAndUpdateProgress = function(requestId, returnFn){
     RequestService.getRequestById(requestId, (result)=>{
         if(!result.error){
             FundOffer.find({requestId: requestId}, function(err, results){
@@ -42,10 +42,10 @@ exports.getOffersAndUpdateProgress = function(requestId, returnFn){
             })
         }
     })
-}
+}*/
 
 exports.getOffersByProviderId = function(providerId, returnFn){
-    FundOffer.find({providerId: providerId}, function(err, results){
+    FundOffer.find({providerId: providerId}, {sort: '-createdAt'}, function(err, results){
         if(err)
             return returnFn(err);
         returnFn(results);
