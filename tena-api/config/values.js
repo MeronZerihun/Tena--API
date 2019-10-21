@@ -1,0 +1,1 @@
+exports.origins = ['http://localhost:3000', 'http://tenaAdminDashboard.com'];

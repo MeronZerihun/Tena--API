@@ -3,8 +3,10 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var CORS = require('cors');
 
 
+var allowedOrigins = require('./config/values').origins;
 var usersRouter = require('./routes/users');
 var banksRouter = require('./routes/banks');
 var requestsRouter = require('./routes/requests');
@@ -22,6 +24,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+allowedOrigins = ['http://localhost:3000', 'http://tenaAdminDashboard.com', 'http://tenaMobile.com'];
+app.use(cors({origin: (origin,callback)=>{
+  if(!origin)
+    return callback(null, true);
+  if(allowedOrigins.indexOf(origin) === -1){
+    var message = "The policy of this site doesn't allow the specified origin" ;
+    return callback(new Error(message), false);
+  }
+  return callback(null, true);
+}}))
 
 app.use('/users', usersRouter);
 app.use('/banks', banksRouter);
