@@ -25,7 +25,7 @@ exports.getRequestsByStatus = function(status, returnFn){
         if(err)
             return returnFn({error: err});
         else if(!results)
-            return returnFn({error: 'no such request'});
+            return returnFn({error: 'No such request'});
         returnFn(results);
     });
 }
@@ -37,7 +37,7 @@ exports.getRequestsByDiagnosis = function(diagnosis, returnFn){
         if(err)
             return returnFn({error: err});
         else if(!results)
-            return returnFn({error: 'no such request'});    
+            return returnFn({error: 'No such request'});    
         returnFn(results);
     });
 }
@@ -123,9 +123,8 @@ exports.unrateRequest = function(requestId, userId, returnFn){
 exports.updateProgress = function(requestId, progressAmount, returnFn){
     FundRequest.findById({_id: requestId}, function(err, result){
         if(err)
-            return returnFn(err);
+            return returnFn({error: err});
         else if(result){
-            console.log(result)
             let progress = result.progress + progressAmount;
             let inPercent = (progress / result.recoveryCost) * 100;
             FundRequest.findByIdAndUpdate({_id: requestId}, {progress: progress, progressPercent: inPercent}, {new: true}, function(err, newResult){
@@ -144,7 +143,7 @@ exports.updateProgress = function(requestId, progressAmount, returnFn){
 exports.updateStatus = function(requestId, status, returnFn){
     FundRequest.findByIdAndUpdate({_id: requestId}, {status: status}, {new: true}, function(err, result){
         if(err)
-            return returnFn(err);
+            return returnFn({error: err});
         else if(!result)
             return returnFn({error: 'No request found'});
         returnFn(result);
@@ -164,7 +163,7 @@ exports.updateRequest = function(requestId, age, gender, maritalStatus, diagnosi
 exports.deleteRequest = function(requestId, returnFn){
     FundRequest.findByIdAndDelete({_id: requestId}, function(err, result){
             if(err)
-                return returnFn(err);
+                return returnFn({error: err});
             else if(!result)
                 return returnFn({error: 'No request found'});
             returnFn(result);
@@ -180,18 +179,19 @@ exports.getRequestByPatient = function(patientName, returnFn){
             results.forEach(result => {
                 FundRequest.find({patientId: result._id}, function(err, res){
                     if(err){
-                        return returnFn(err);
+                        return returnFn({error: err});
                     }
                     else if(res){
                         users = users.concat(res);
                     }
                     if(results[results.length-1]===result){
+                        if(users.length===0){
+                            return returnFn({error: 'No requests found by the user'});
+                        }
                         returnFn(users);
                     }
                 })
             });
-           
-            
         }
         else{
             returnFn({error: 'No such patient'});

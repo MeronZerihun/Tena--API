@@ -4,11 +4,11 @@ const FundOffer = require('../models/FundOffer');
 exports.getNotifications = function(returnFn){
     Rate.find({}, function(err, rates){
         if(err)
-            return returnFn(err);
+            return returnFn({error: err});
         else{
             FundOffer.find({}, function(err, offers){
                 if(err)
-                    return returnFn(err);
+                    return returnFn({error: err});
                 else{
                     let offersAndRates = offers.concat(rates);
                     offersAndRates.sort((a,b)=>(a.createdAt > b.createdAt) ? 1 : -1); 

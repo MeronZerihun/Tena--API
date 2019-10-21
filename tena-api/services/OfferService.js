@@ -13,7 +13,7 @@ exports.offerFund = function(bankType, amount, accountNo, requestId, providerId,
                             let fundOffer = new FundOffer({accountNumber: accountNo, paymentOption: bankType, fundAmount: amount, providerId: providerId, requestId: requestId});
                             fundOffer.save(function(err, result){
                                 if(err)
-                                    return returnFn(err);
+                                    return returnFn({error: err});
                                 else{
                                     returnFn(result);
                                     RequestService.updateProgress(requestId,amount,(updateReq)=>{

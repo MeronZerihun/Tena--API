@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 exports.findAllUsers = function (returnFn){
     User.find({}, function(err, res){
         if(err)
-            return returnFn(err);
+            return returnFn({error: err});
         returnFn(res);
     });
 }
@@ -12,10 +12,13 @@ exports.findAllUsers = function (returnFn){
 exports.findUsersByRole = function (role, returnFn){
     User.find({role: role}, function(err, res){
         if(err){
-            console.log(err);
-            return returnFn(err);
+            return returnFn({error: err});
         }
-        returnFn(res);
+        else if(res.length > 0){
+            return returnFn(res);
+        }
+        returnFn({error: 'No user found'});
+        
     })
 }
 
@@ -23,7 +26,7 @@ exports.insertUser = function (fullName, email, phoneNo, password, role, returnF
     let user = new User({fullName: fullName, email: email, phoneNo: phoneNo,password: password, role: role});
     user.save((err, res)=>{
         if(err)
-            return returnFn(err);
+            return returnFn({error: err});
         returnFn(res);
     });
     
@@ -32,8 +35,11 @@ exports.insertUser = function (fullName, email, phoneNo, password, role, returnF
 exports.updateAUser = function(id, newUser, returnFn){
     User.findByIdAndUpdate({_id: id}, newUser,{new: true}, function(err, result){
         if(err) 
-            return returnFn(err); 
-        returnFn(result); 
+            return returnFn({error: err}); 
+        else if(result)
+            return returnFn(result);
+        returnFn({error: err}) 
+        
     });
 
 }
@@ -41,23 +47,26 @@ exports.updateAUser = function(id, newUser, returnFn){
 exports.loginUser = function(email, password, returnFn){
     User.find({email: email}, function(err, res){
         if(err)
-            return returnFn(err);
-        else{
+            return returnFn({error: err});
+        else if(res.length > 0){
             bcrypt.compare(password, res.password, function(err){
                 if(err)
-                    returnFn(err);
+                    return returnFn({error: err});
                 else
-                    returnFn(res);
+                    return returnFn(res);
             })
         }
+        returnFn({error: 'No user found'})
     })
 }
 
 exports.blockUser = function(userId, returnFn){
     User.findByIdAndUpdate({_id: userId}, {status: 'blocked'}, {new: true}, function(err, result){
         if(err)
-            return returnFn(err);
-        returnFn(result);
+            return returnFn({error: err});
+        else if(result)
+            returnFn(result);
+        returnFn({error: "No user found"});
     })
 }
 
@@ -67,7 +76,7 @@ exports.findUserById = function(id, returnFn){
             return returnFn({error: err});
         else if(result.length > 0)
             return returnFn({success: 'User found'});
-        returnFn({error: 'User not found'});
+        returnFn({error: 'No user found'});
         
     })
 }
@@ -76,8 +85,8 @@ exports.findUserByName = function(name, returnFn){
     User.find({fullName: {$regex:`${name}*`, $options:'i'}}, function(err, result){
         if(err)
             return returnFn({error: err});
-        else if(result)
+        else if(result.length > 0)
             return returnFn(result);
-        returnFn({error: 'User not found'});
+        returnFn({error: 'No user found'});
     })
 }
