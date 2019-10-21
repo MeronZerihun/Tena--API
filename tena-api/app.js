@@ -14,7 +14,10 @@ var offersRouter = require('./routes/offers');
 var notificationsRouter = require('./routes/notifications');
 
 var app = express();
-var db = require('./config/connectDb');
+var dbConnect = require('./config/connectDb');
+var seedData = require('./config/seedData');
+
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -26,7 +29,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 allowedOrigins = ['http://localhost:3000', 'http://tenaAdminDashboard.com', 'http://tenaMobile.com'];
-app.use(cors({origin: (origin,callback)=>{
+app.use(CORS({origin: (origin,callback)=>{
   if(!origin)
     return callback(null, true);
   if(allowedOrigins.indexOf(origin) === -1){

@@ -1,10 +1,19 @@
 const Bank = require('../models/Bank');
 
+exports.addBank = function(type, amount, account, returnFn){
+    let bank = new Bank({type: type, accountNumber: account, deposit: amount});
+    bank.save(function(err, newBank){
+        if(err)
+            return returnFn({error: err});
+        returnFn(newBank);
+    })
+}
+
 exports.debitAmount = function(type, amount, account, returnFn){
     Bank.find({accountNumber: account, type: type}, function(err, result){
         if(err)
             return returnFn({error: err});
-        else{
+        else if(result.length > 0){
             if(result[0].deposit < amount)
                 return returnFn({error: 'Insufficient deposit'});
             else{
@@ -14,14 +23,14 @@ exports.debitAmount = function(type, amount, account, returnFn){
                     else{
                         Bank.find({accountNumber: '8238968969'}, function(err, adminAcc){
                             if(err){
-                                return returnFn({error: err})
+                                return returnFn({error: err});
                             }
                             else if(adminAcc.length > 0){
                                 Bank.findByIdAndUpdate(adminAcc[0]._id,{deposit: adminAcc[0].deposit + amount},(err, newAcc)=>{
                                     if(err)
                                         returnFn({error: err});
                                     else if(newAcc)
-                                        returnFn(res)
+                                        returnFn(res);
                                     
                                 })
                             }
@@ -29,6 +38,9 @@ exports.debitAmount = function(type, amount, account, returnFn){
                     }
                 })
             }
+        }
+        else{
+            returnFn({error:'No such account'});
         }
 
     })
