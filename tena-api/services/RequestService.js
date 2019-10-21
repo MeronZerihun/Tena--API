@@ -24,7 +24,7 @@ exports.getRequestsByStatus = function(status, returnFn){
     FundRequest.find({status: status, progressPercent: {$lte: 100}}, function(err, results){
         if(err)
             return returnFn({error: err});
-        else if(!result)
+        else if(!results)
             return returnFn({error: 'no such request'});
         returnFn(results);
     });
@@ -36,7 +36,7 @@ exports.getRequestsByDiagnosis = function(diagnosis, returnFn){
     FundRequest.find({diagnosis: diagnosis}, function(err, results){
         if(err)
             return returnFn({error: err});
-        else if(!result)
+        else if(!results)
             return returnFn({error: 'no such request'});    
         returnFn(results);
     });
