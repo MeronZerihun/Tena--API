@@ -5,7 +5,7 @@ const UserService = require('./UserService');
 
 exports.createRequest = function(age, gender, cost, maritalStatus, description, photo, diagnosis, verificationFile, patientId, returnFn){
     UserService.findUserById(patientId, (result)=>{
-        if(result.success=='User found'){
+        if(result.success){
             let request = new FundRequest({age: age, gender: gender, maritalStatus: maritalStatus, diagnosis: diagnosis, description: description, photo: photo, verificationFile: verificationFile, recoveryCost: cost, patientId: patientId});
             request.save(function(err, newRequest){
             if(err)
@@ -26,19 +26,79 @@ exports.getRequestsByStatus = function(status, returnFn){
             return returnFn({error: err});
         else if(!results)
             return returnFn({error: 'No such request'});
-        returnFn(results);
+        else{
+            let requests = [];
+            results.forEach((result)=>{
+                let patientId = result.patientId;
+                UserService.findUserById(patientId, (patient)=>{
+                    if(patient.success){
+                        let obj = result.toObject();
+                        obj.user = patient.success;
+                        Rate.find({requestId: result._id, userId: patient.success._id}, function(err, rate){
+                            if(err){
+                                returnFn({error: err});
+                            }
+                            else if(rate.length > 0){
+                                obj.rate = true;
+                            }
+                            else{
+                                obj.rate = false;
+                            }
+                            requests.push(obj);
+                            if(results.length === requests.length){
+                            returnFn(requests);
+                        }
+                        });
+                        
+                    }
+                    else{
+                        return patient;
+                    }
+                })
+                
+            })
+        }
+        
     });
 }
 
 
 // might be interested in suggestion
 exports.getRequestsByDiagnosis = function(diagnosis, returnFn){
-    FundRequest.find({diagnosis: diagnosis}, function(err, results){
+    FundRequest.find({diagnosis: {$regex: `${diagnosis}` , $options:'i'}}, function(err, results){
         if(err)
             return returnFn({error: err});
-        else if(!results)
+        else if(results.length === 0)
             return returnFn({error: 'No such request'});    
-        returnFn(results);
+        else{
+            let requests = [];
+            results.forEach((result)=>{
+                let patientId = result.patientId;
+                UserService.findUserById(patientId, (patient)=>{
+                    if(patient.success){
+                        let obj = result.toObject();
+                        obj.user = patient.success;
+                        Rate.find({requestId: result._id, userId: patient.success._id}, function(err, rate){
+                            if(err){
+                                returnFn({error: err});
+                            }
+                            else if(rate.length > 0){
+                                obj.rate = true;
+                            }
+                            else{
+                                obj.rate = false;
+                            }
+                            requests.push(obj);
+                            if(results.length === requests.length){
+                            returnFn(requests);
+                        }
+                        });
+                        
+                    }
+                })
+                
+            })
+        }
     });
 }
 

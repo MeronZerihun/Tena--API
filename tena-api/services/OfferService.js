@@ -17,7 +17,7 @@ exports.offerFund = function(bankType, amount, accountNo, requestId, providerId,
                                 else{
                                     returnFn(result);
                                     RequestService.updateProgress(requestId,amount,(updateReq)=>{
-                                            console.log(updateReq);
+                                            //console.log(updateReq);
                                     });
                                 }
                             })
@@ -45,5 +45,16 @@ exports.getOffersByProviderId = function(providerId, returnFn){
          else if(results.length)   
             return returnFn(results.sort((a,b)=>(a.createdAt > b.createdAt) ? 1 : -1));
         returnFn({error: 'User has no offers'});
+    })
+}
+
+exports.getAllOffers = function(returnFn){
+    FundOffer.find({}, function(err, offers){
+        if(err)
+            return returnFn({error: err});
+        else if(offers.length>0)
+            return returnFn(offers);
+        else
+            return returnFn({error: 'No offers found'})
     })
 }

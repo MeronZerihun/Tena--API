@@ -8,8 +8,7 @@ let fundOfferSchema = new Schema({
     paymentOption: {type: String, required: true},
     fundAmount: {type: Number, required: true},
     providerId: {type: Schema.Types.ObjectId, ref: 'User', required: true},
-    requestId: {type: Schema.Types.ObjectId, ref: 'FundRequest', required: true}
-    
+    requestId: {type: Schema.Types.ObjectId, ref: 'FundRequest', required: true} 
 });
 
 module.exports = mongoose.model('FundOffer', fundOfferSchema);

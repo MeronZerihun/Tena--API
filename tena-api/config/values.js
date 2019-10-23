@@ -1,1 +1,1 @@
-exports.origins = ['http://localhost:3000', 'http://tenaAdminDashboard.com'];
+exports.origins = ['http://localhost:8080', 'http://tenaAdminDashboard.com'];

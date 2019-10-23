@@ -15,7 +15,9 @@ var notificationsRouter = require('./routes/notifications');
 
 var app = express();
 var dbConnect = require('./config/connectDb');
-var seedData = require('./config/seedData');
+
+
+//var seedData = require('./config/seedData');
 
 
 // view engine setup
@@ -28,7 +30,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-allowedOrigins = ['http://localhost:3000', 'http://tenaAdminDashboard.com', 'http://tenaMobile.com'];
+
+
+var seedData = require('./config/seedData');
+
+
 app.use(CORS({origin: (origin,callback)=>{
   if(!origin)
     return callback(null, true);

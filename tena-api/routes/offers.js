@@ -7,4 +7,6 @@ router.post('/fund', OfferController.offerFund);
 
 router.get('/:id', OfferController.getOffersByProvider);
 
+router.get('/', OfferController.getAllOffers);
+
 module.exports = router;

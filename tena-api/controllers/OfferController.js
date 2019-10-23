@@ -11,3 +11,9 @@ exports.getOffersByProvider = function(req,res,next){
         res.status(res.statusCode).json(results);
     })
 }
+
+exports.getAllOffers = function(req, res, next){
+    OfferService.getAllOffers((results)=>{
+        res.status(res.statusCode).json(results);
+    })
+}
