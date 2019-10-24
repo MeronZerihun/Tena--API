@@ -59,8 +59,6 @@ exports.loginUser = function(email, password, returnFn){
         if(err)
             return returnFn({error: err, status: 500});
         else if(user.length){
-            //console.log(user)
-            console.log(user[0].password);
             bcrypt.compare(password, user[0].password, function(err,res){
                 if(!res)
                     return returnFn({error: "Invalid email or password", status: 400});
@@ -86,22 +84,22 @@ exports.blockUser = function(userId, returnFn){
 }
 
 exports.findUserById = function(id, returnFn){
-    User.findById(id, function(err, result){
+    User.find({_id: id}, function(err, result){
         if(err)
             return returnFn({error: err, status: 500});
         else if(result)
-            return returnFn({success: result, status: 200});
+            return returnFn({success: result[0], status: 200});
         returnFn({error: 'No user found', status: 400});
         
     })
 }
 
 exports.findUserByName = function(name, returnFn){
-    User.find({fullName: {$regex:`${name}`, $options:'i'}, role: 'receiver'}, function(err, result){
+    User.find({fullName: {$regex:`^${name}`, $options:'i'}, role: 'receiver'}, function(err, result){
         if(err)
             return returnFn({error: err});
         else if(result.length > 0)
-            return returnFn(result);
+            return returnFn({success: result, status: 200});
         returnFn({error: 'No user found'});
     })
 }

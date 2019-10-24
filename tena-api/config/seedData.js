@@ -8,8 +8,9 @@ UserService.findUsersByRole('admin',(results)=>{
     if(results.error){
         // Receiver
         UserService.insertUser("Abebe","abebe@gmail.com","1234567","abcde","receiver",(receiver)=>{
+            console.log(receiver)
             // Request
-            RequestService.createRequest(10, "F" , 1000, "married" , "blablabla", "2019-10-20T10:16:04.632Z-tena_logo.jpg", "Cancer","2019-10-20T10:16:04.631Z-index.js",receiver._id,(request)=>{
+            RequestService.createRequest(10, "F" , 1000, "married" , "blablabla", "2019-10-20T10:16:04.632Z-tena_logo.jpg", "Cancer","2019-10-20T10:16:04.631Z-index.js",receiver.success._id,(request)=>{
                 console.log(request)
                 // Provider
                 UserService.insertUser("Meron","abc@gmail.com","1234567","abcde","provider",(provider)=>{
@@ -18,7 +19,7 @@ UserService.findUsersByRole('admin',(results)=>{
                         // User account
                         BankService.addBank("MasterCard", 5940, "12387896456",(result)=>{
                             // Offer
-                            OfferService.offerFund("MasterCard", 100, "12387896456",request._id,provider._id,(offer)=>{
+                            OfferService.offerFund("MasterCard", 100, "12387896456",request._id,provider.success._id,(offer)=>{
                                
                                 
                             });

@@ -4,7 +4,7 @@ let Schema = mongoose.Schema;
 
 let requestSchema = new Schema({
     requestedAt: {type: Date, default: Date.now},
-    age: {type: String, required: true},
+    age: {type: Number, required: true},
     gender : {type: String, required: true},
     maritalStatus: {type: String, required: true},
     description: {type: String, required: true},
