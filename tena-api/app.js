@@ -51,6 +51,8 @@ app.use('/requests', requestsRouter);
 app.use('/offers',offersRouter);
 app.use('/notifications', notificationsRouter);
 
+app.use('/tena-uploads', express.static('tena-uploads'));
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

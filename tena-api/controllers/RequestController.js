@@ -2,9 +2,10 @@ const RequestService = require('../services/RequestService');
 
 exports.makeFundRequest = function(req, res, next){
     let uploads = req.files;
+    console.log(req.files)
     let requestObj = req.body;
     
-    RequestService.createRequest(requestObj.age,requestObj.gender, requestObj.recoveryCost, requestObj.maritalStatus, requestObj.description, uploads.photo[0].filename, requestObj.diagnosis, uploads.verificationFile[0].filename, requestObj.patientId,(result)=>{
+    RequestService.createRequest(requestObj.age,requestObj.gender, requestObj.recoveryCost, requestObj.maritalStatus, requestObj.description, uploads.photo[0].path, requestObj.diagnosis, uploads.verificationFile[0].path, requestObj.patientId,(result)=>{
         res.status(result.status).json(result);
     });
 }
