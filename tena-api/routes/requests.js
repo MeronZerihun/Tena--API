@@ -67,4 +67,7 @@ router.put('/delete/:id', RequestController.deleteRequest);
 
 router.get('/search/:name', RequestController.searchRequestByPatientName);
 
+router.get('/patients', RequestController.getRequestsByPatientId);
+
+
 module.exports = router; 

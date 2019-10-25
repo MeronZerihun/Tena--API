@@ -86,3 +86,9 @@ exports.searchRequestByPatientName = function(req, res, next){
     })
 }
 
+exports.getRequestsByPatientId = function(req, res, next){
+    RequestService.getRequestByPatientId(req.body.patientId, (requests)=>{
+        res.status(requests.status).json(requests);
+        
+    })
+}

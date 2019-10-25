@@ -8,7 +8,7 @@ exports.findAllUsers = function (returnFn){
         else if(res.length == 0){
             return returnFn({error: "No users found", status: 204});
         }
-        returnFn({success: res, status: 200});
+        returnFn({data: res, status: 200});
     });
 }
 
@@ -18,7 +18,7 @@ exports.findUsersByRole = function (role, returnFn){
             return returnFn({error: err, status: 500});
         }
         else if(res.length > 0){
-            return returnFn({success: res, status: 200});
+            return returnFn({data: res, status: 200});
         }
         returnFn({error: 'No user found', status: 204});
         
@@ -35,7 +35,7 @@ exports.insertUser = function (fullName, email, phoneNo, password, role, returnF
             user.save((err, res)=>{
             if(err)
                 return returnFn({error: err, status: 400});
-            returnFn({success: res, status: 201});
+            returnFn({data: res, status: 201});
             });
         }
     
@@ -48,7 +48,7 @@ exports.updateAUser = function(id, newUser, returnFn){
         if(err) 
             return returnFn({error: err, status: 400}); 
         else if(result)
-            return returnFn({success: result, status: 200});
+            return returnFn({data: result, status: 200});
         
     });
 
@@ -63,7 +63,7 @@ exports.loginUser = function(email, password, returnFn){
                 if(!res)
                     return returnFn({error: "Invalid email or password", status: 400});
                 else{
-                    return returnFn({success: user[0], status: 200})
+                    return returnFn({data: user[0], status: 200})
                 }
             })
         }
@@ -78,7 +78,7 @@ exports.blockUser = function(userId, returnFn){
         if(err)
             return returnFn({error: err, status: 500});
         else if(result)
-            returnFn({success: result, status: 200});
+            returnFn({data: result, status: 200});
         returnFn({error: "No user found", status: 400});
     })
 }
@@ -88,7 +88,7 @@ exports.findUserById = function(id, returnFn){
         if(err)
             return returnFn({error: err, status: 500});
         else if(result)
-            return returnFn({success: result[0], status: 200});
+            return returnFn({data: result[0], status: 200});
         returnFn({error: 'No user found', status: 400});
         
     })
@@ -99,7 +99,7 @@ exports.findUserByName = function(name, returnFn){
         if(err)
             return returnFn({error: err});
         else if(result.length > 0)
-            return returnFn({success: result, status: 200});
+            return returnFn({data: result, status: 200});
         returnFn({error: 'No user found'});
     })
 }

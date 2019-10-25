@@ -10,7 +10,7 @@ function updateAdminAccount(amount, res, returnFn){
                 if(err)
                     returnFn({error: err, status: 500});
                 else if(newAcc)
-                    returnFn({success: res, status: 200});
+                    returnFn({data: res, status: 200});
             })
         }
         else
@@ -38,7 +38,7 @@ exports.addBank = function(type, amount, account, returnFn){
     bank.save(function(err, newBank){
         if(err)
             return returnFn({error: err, status: 400});
-        returnFn({success: newBank, status: 201});
+        returnFn({data: newBank, status: 201});
     })
 }
 

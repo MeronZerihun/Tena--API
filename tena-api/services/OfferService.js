@@ -47,20 +47,20 @@ exports.offerFund = function(bankType, amount, accountNo, requestId, providerId,
 exports.getOffersByProviderId = function(providerId, returnFn){
     FundOffer.find({providerId: providerId}, function(err, results){
         if(err)
-            return returnFn({error: err});
+            return returnFn({error: err, status: 400});
          else if(results.length)   
-            return returnFn(results.sort((a,b)=>(a.createdAt > b.createdAt) ? 1 : -1));
-        returnFn({error: 'No offers found'});
+            return returnFn({data: (results.sort((a,b)=>(a.createdAt > b.createdAt) ? 1 : -1)), status: 200});
+        returnFn({error: 'No offers found', status: 404});
     })
 }
 
 exports.getAllOffers = function(returnFn){
     FundOffer.find({}, function(err, offers){
         if(err)
-            return returnFn({error: err});
+            return returnFn({error: err, status: 500});
         else if(offers.length>0)
-            return returnFn(offers);
+            return returnFn({data: offers, status: 200});
         else
-            return returnFn({error: 'No offers found'})
+            return returnFn({error: 'No offers found', status: 404});
     })
 }

@@ -8,9 +8,9 @@ function addUserAndRateObj(results, userId, returnFn){
     results.forEach((result)=>{
         let patientId = result.patientId;
         UserService.findUserById(patientId, (patient)=>{
-            if(patient.success){
+            if(patient.data){
                 let obj = result.toObject();
-                obj.user = patient.success;
+                obj.user = patient.data;
                 Rate.find({requestId: result._id, userId: userId}, function(err, rate){
                     if(err)
                         return returnFn({error: err, status:400});
@@ -20,7 +20,7 @@ function addUserAndRateObj(results, userId, returnFn){
                         obj.rate = false;
                     requests.push(obj);
                     if(results.length === requests.length){
-                        returnFn({success: requests, status: 200});
+                        returnFn({data: requests, status: 200});
                     }
                 });
             }
@@ -44,7 +44,7 @@ function addOnRate(request, userId, returnFn){
                     rate.save(function(err, result){
                     if(err)
                         return returnFn({error: err, status: 400});
-                    returnFn({success: 'Request has been rated', status: 200});
+                    returnFn({data: 'Request has been rated', status: 200});
                     });
                 }
             })
@@ -67,7 +67,7 @@ function subtractOnRate(requestId, userId, returnFn){
                     Rate.findOneAndDelete({requestId: request._id, userId: userId}, function(err, res){
                         if(err)
                             return returnFn({error: err, status: 400});
-                        returnFn({success: 'Request has been unrated', status: 200});
+                        returnFn({data: 'Request has been unrated', status: 200});
                     });
                 }
             })
@@ -102,12 +102,12 @@ function requestsByPatient(results, loggedUserId, returnFn){
 
 exports.createRequest = function(age, gender, cost, maritalStatus, description, photo, diagnosis, verificationFile, patientId, returnFn){
     UserService.findUserById(patientId, (result)=>{
-        if(result.success){
+        if(result.data){
             let request = new FundRequest({age: age, gender: gender, maritalStatus: maritalStatus, diagnosis: diagnosis, description: description, photo: photo, verificationFile: verificationFile, recoveryCost: cost, patientId: patientId});
             request.save(function(err, newRequest){
             if(err)
                 return returnFn({error: err, status: 400});
-            returnFn({success: newRequest, status: 201});
+            returnFn({data: newRequest, status: 201});
             });
         }
         else{
@@ -151,7 +151,7 @@ exports.getRequestsByDiagnosis = function(diagnosis, loggedUserId, returnFn){
 
 exports.rateRequest = function(requestId, userId, returnFn){
     UserService.findUserById(userId,(result)=>{
-        if(result.success){
+        if(result.data){
             FundRequest.find({_id: requestId}, function(err, resultReq){
                 if(err)
                     return returnFn({error: err, status: 400});
@@ -174,7 +174,7 @@ exports.rateRequest = function(requestId, userId, returnFn){
 
 exports.unrateRequest = function(requestId, userId, returnFn){
     UserService.findUserById(userId,(result)=>{
-        if(result.success){
+        if(result.data){
                 Rate.find({requestId: requestId, userId: userId}, function(err, result){
                     if(err)
                         return returnFn({error: err, status: 400});
@@ -202,7 +202,7 @@ exports.updateProgress = function(requestId, progressAmount, returnFn){
             FundRequest.findByIdAndUpdate({_id: requestId}, {progress: progress, progressPercent: inPercent}, {new: true}, function(err, newResult){
                 if(err)
                     return returnFn({error: err, status: 400});
-                returnFn({success: newResult, status: 204});
+                returnFn({data: newResult, status: 204});
             });
         }
         else{
@@ -218,7 +218,7 @@ exports.updateStatus = function(requestId, status, returnFn){
             return returnFn({error: err, status: 400});
         else if(!result)
             return returnFn({error: 'No request found', status: 404});
-        returnFn({success: result, status: 200});
+        returnFn({data: result, status: 200});
     });
 }
 
@@ -228,7 +228,7 @@ exports.updateRequest = function(requestId, age, gender, maritalStatus, diagnosi
             return returnFn({error: err, status: 400});
         else if(!result)
             return returnFn({error: 'No request found', status: 404});
-        returnFn({success: result, status: 204});
+        returnFn({data: result, status: 204});
     });
 }
 
@@ -238,7 +238,7 @@ exports.deleteRequest = function(requestId, returnFn){
                 return returnFn({error: err, status: 400});
             else if(!result)
                 return returnFn({error: 'No request found', status: 404});
-            returnFn({success: result, status: 201});
+            returnFn({data: result, status: 201});
     });
 }
 
@@ -246,7 +246,7 @@ exports.deleteRequest = function(requestId, returnFn){
 exports.getRequestByPatient = function(patientName, loggedUserId, returnFn){
     UserService.findUserByName(patientName, (results)=>{
         if(!results.error){
-            requestsByPatient(results.success, loggedUserId, (reqList)=> {
+            requestsByPatient(results.data, loggedUserId, (reqList)=> {
                 return returnFn(reqList);
             })
         }
@@ -262,8 +262,17 @@ exports.getRequestById = function(id, returnFn){
         if(err)
             return returnFn({error: err, status: 400});
         else if(results.length > 0)
-            return returnFn({success: results[0], status: 200});
+            return returnFn({data: results[0], status: 200});
         returnFn({error: 'No request found', status: 404});
     })
 }
 
+exports.getRequestByPatientId = function(patientId, returnFn){
+    FundRequest.find({patientId: patientId}, function(err, requests){
+        if(err)
+            return returnFn({error: err, status: 400});
+        else if(requests.length)
+            return returnFn({data: requests, status: 200});
+        returnFn({error: 'No requests made by this patient', status: 404});
+    })
+}

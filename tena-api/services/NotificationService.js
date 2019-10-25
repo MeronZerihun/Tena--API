@@ -12,8 +12,8 @@ objEvent.on('addProvider', function(newOffers, offer, returnFn){
     let newOffer = offer.toObject();
     newOffer.type = 'offer';
     UserService.findUserById(offer.providerId, (user)=>{
-        if(user.success){
-            newOffer.provider = user.success;
+        if(user.data){
+            newOffer.provider = user.data;
             objEvent.emit('addRequest', newOffers, newOffer,(results)=>{
                 returnFn(results);
             })
@@ -28,7 +28,7 @@ objEvent.on('addRequest', function(newOffers, offer, returnFn){
     RequestService.getRequestById(offer.requestId, (request)=>{
         if(request.error)
             return returnFn(request);
-        offer.request = request.success;
+        offer.request = request.data;
         objEvent.emit('addPatient', newOffers, offer, (results)=>{
             returnFn(results);
         })
@@ -50,8 +50,8 @@ objEvent.on('addUser', function(newRates, rate, returnFn){
     let rateObj = rate.toObject();
     rateObj.type = 'rate';
     UserService.findUserById(rate.userId, (user)=>{
-        if(user.success){
-            rateObj.user = user.success;
+        if(user.data){
+            rateObj.user = user.data;
             objEvent.emit('addRequestToRate', newRates, rateObj, (results)=>{
                 returnFn(results);
             })
@@ -67,7 +67,7 @@ objEvent.on('addRequestToRate', function(newRates, rate, returnFn){
     RequestService.getRequestById(rate.requestId, (request)=>{
         if(request.error)
             return returnFn(request);
-        rate.request = request.success;
+        rate.request = request.data;
         newRates.push(rate)
         returnFn(newRates);
     })
