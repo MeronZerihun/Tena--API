@@ -40,6 +40,7 @@ objEvent.on('addPatient', function(newOffers, offer, returnFn){
         if(patient.error)
             return returnFn(patient);
         offer.patient = patient;
+        offer.status = 200
         newOffers.push(offer);
         returnFn(newOffers);
         
@@ -48,6 +49,7 @@ objEvent.on('addPatient', function(newOffers, offer, returnFn){
 
 objEvent.on('addUser', function(newRates, rate, returnFn){
     let rateObj = rate.toObject();
+    console.log(rate)
     rateObj.type = 'rate';
     UserService.findUserById(rate.userId, (user)=>{
         if(user.data){
@@ -68,6 +70,7 @@ objEvent.on('addRequestToRate', function(newRates, rate, returnFn){
         if(request.error)
             return returnFn(request);
         rate.request = request.data;
+        rate.status = 200;
         newRates.push(rate)
         returnFn(newRates);
     })
@@ -110,6 +113,11 @@ exports.getNotifications = function(returnFn){
                     }
                 })
             })
+        }
+        else{
+            addOffersToNotifications(newRates, (results)=>{
+                return returnFn(results)
+            });
         }        
     })
 }
