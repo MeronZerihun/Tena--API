@@ -105,7 +105,7 @@ exports.getNotifications = function(returnFn){
         else if(rates.length >0) {
             rates.forEach((rate)=>{
                 objEvent.emit('addUser', newRates, rate, (newRatesArr)=>{
-                    console.log(newRatesArr)
+                    //console.log(newRatesArr)
                     if(rates[rates.length-1]===rate){
                         addOffersToNotifications(newRatesArr, (results)=>{
                             return returnFn(results)
@@ -116,7 +116,7 @@ exports.getNotifications = function(returnFn){
         }
         else{
             addOffersToNotifications(newRates, (results)=>{
-                return returnFn(results)
+                return returnFn(results.sort((a, b)=> (a.createdAt < b.createdAt)?  1 : -1 ))
             });
         }        
     })

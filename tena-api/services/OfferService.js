@@ -15,7 +15,7 @@ function debitAmountFromProvider(bankType, amount, accountNo, requestId, provide
                             if(updateReq.error){
                                 return returnFn(updateReq);
                             }
-                            returnFn(result);
+                            returnFn({data: result, status: 200});
                     });
                 }
             })
