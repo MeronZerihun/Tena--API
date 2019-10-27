@@ -76,19 +76,15 @@ exports.getOffersByProviderId = function(providerId, returnFn){
                                 offers.push(newOffer);
                                 if(result === results[results.length - 1])
                                     return returnFn(offers.sort((a,b) => (a.data.createdAt < b.data.createdAt) ? 1 : -1))
-                            
                             }
                             else
                                 return returnFn(newOffer);
-                            
                         })
-                        
-                        
                     }
                     else
                         return returnFn(request);
-                 })
-             })
+                })
+            })
         }   
         else
             returnFn({message: 'No offers found', status: 404});
