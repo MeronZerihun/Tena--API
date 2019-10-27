@@ -9,7 +9,8 @@ class ObjEvents extends EventEmitter{}
 let objEvent = new ObjEvents();
 
 objEvent.on('addProvider', function(newOffers, offer, returnFn){
-    let newOffer = offer.toObject();
+    let newOffer = {};
+    newOffer.data = offer.toObject();
     newOffer.type = 'offer';
     UserService.findUserById(offer.providerId, (user)=>{
         if(user.data){
@@ -25,7 +26,7 @@ objEvent.on('addProvider', function(newOffers, offer, returnFn){
 })
 
 objEvent.on('addRequest', function(newOffers, offer, returnFn){
-    RequestService.getRequestById(offer.requestId, (request)=>{
+    RequestService.getRequestById(offer.data.requestId, (request)=>{
         if(request.error)
             return returnFn(request);
         offer.request = request.data;
@@ -48,8 +49,9 @@ objEvent.on('addPatient', function(newOffers, offer, returnFn){
 })
 
 objEvent.on('addUser', function(newRates, rate, returnFn){
-    let rateObj = rate.toObject();
-    console.log(rate)
+    let rateObj = {};
+    rateObj.data = rate.toObject();
+
     rateObj.type = 'rate';
     UserService.findUserById(rate.userId, (user)=>{
         if(user.data){
@@ -66,7 +68,7 @@ objEvent.on('addUser', function(newRates, rate, returnFn){
 })
 
 objEvent.on('addRequestToRate', function(newRates, rate, returnFn){
-    RequestService.getRequestById(rate.requestId, (request)=>{
+    RequestService.getRequestById(rate.data.requestId, (request)=>{
         if(request.error)
             return returnFn(request);
         rate.request = request.data;
@@ -105,7 +107,6 @@ exports.getNotifications = function(returnFn){
         else if(rates.length >0) {
             rates.forEach((rate)=>{
                 objEvent.emit('addUser', newRates, rate, (newRatesArr)=>{
-                    //console.log(newRatesArr)
                     if(rates[rates.length-1]===rate){
                         addOffersToNotifications(newRatesArr, (results)=>{
                             return returnFn(results)
@@ -116,7 +117,7 @@ exports.getNotifications = function(returnFn){
         }
         else{
             addOffersToNotifications(newRates, (results)=>{
-                return returnFn(results.sort((a, b)=> (a.createdAt < b.createdAt)?  1 : -1 ))
+                return returnFn(results)
             });
         }        
     })
