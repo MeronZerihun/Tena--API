@@ -6,3 +6,9 @@ exports.debit = function(req, res, next){
         res.status(result.status).json(result);
     });
 }
+
+exports.showAdminAccount = function(req, res, next){
+    BankService.showAdminAccount( (result) => {
+        res.status(result.status).json(result);
+    })
+}

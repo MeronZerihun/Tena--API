@@ -57,3 +57,12 @@ exports.debitAmount = function(type, amount, account, returnFn){
         }
     })
 }
+
+exports.showAdminAccount = function(returnFn){
+    Bank.find({accountNumber: '8238968969'}, function(err, adminAcc){
+        if(err)
+            return returnFn({error: err, status: 404});
+        else    
+            returnFn({data: adminAcc, status: 200});
+    })
+}
