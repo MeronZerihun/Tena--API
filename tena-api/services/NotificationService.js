@@ -88,7 +88,10 @@ function addOffersToNotifications(newRates, returnFn){
             offers.forEach((offer)=>{
                 objEvent.emit('addProvider', newOffers, offer, (results)=>{
                     if(offer === offers[offers.length - 1]){
-                        returnFn(results.concat(newRates))
+                        if(results.error){
+                            return returnFn(results);
+                        }
+                        returnFn(results.concat(newRates));
                     }
                 })
             })
@@ -109,7 +112,7 @@ exports.getNotifications = function(returnFn){
                 objEvent.emit('addUser', newRates, rate, (newRatesArr)=>{
                     if(rates[rates.length-1]===rate){
                         addOffersToNotifications(newRatesArr, (results)=>{
-                            return returnFn(results)
+                            return returnFn(results);
                         })
                     }
                 })
@@ -117,7 +120,7 @@ exports.getNotifications = function(returnFn){
         }
         else{
             addOffersToNotifications(newRates, (results)=>{
-                return returnFn(results)
+                return returnFn(results);
             });
         }        
     })
