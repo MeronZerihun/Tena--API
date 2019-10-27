@@ -14,7 +14,7 @@ function updateAdminAccount(amount, res, returnFn){
             })
         }
         else
-            returnFn({error: 'No such bank account found', status: 400})
+            returnFn({message: 'No such bank account found', status: 404})
     })
 }
 

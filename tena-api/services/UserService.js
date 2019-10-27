@@ -6,7 +6,7 @@ exports.findAllUsers = function (returnFn){
         if(err)
             return returnFn({error: err, status:500});
         else if(res.length == 0){
-            return returnFn({error: "No users found", status: 204});
+            return returnFn({message: "No users found", status: 200});
         }
         returnFn({data: res, status: 200});
     });
@@ -20,7 +20,7 @@ exports.findUsersByRole = function (role, returnFn){
         else if(res.length > 0){
             return returnFn({data: res, status: 200});
         }
-        returnFn({error: 'No user found', status: 204});
+        returnFn({message: 'No user found', status: 404});
         
     })
 }
@@ -61,14 +61,14 @@ exports.loginUser = function(email, password, returnFn){
         else if(user.length){
             bcrypt.compare(password, user[0].password, function(err,res){
                 if(!res)
-                    return returnFn({error: "Invalid email or password", status: 400});
+                    return returnFn({message: "Invalid email or password", status: 400});
                 else{
                     return returnFn({data: user[0], status: 200})
                 }
             })
         }
         else{
-            returnFn({error: "Invalid email or password", status: 400});
+            returnFn({message: "Invalid email or password", status: 400});
         }
     })
 }
@@ -79,7 +79,7 @@ exports.blockUser = function(userId, returnFn){
             return returnFn({error: err, status: 500});
         else if(result)
             returnFn({data: result, status: 200});
-        returnFn({error: "No user found", status: 400});
+        returnFn({message: "No user found", status: 400});
     })
 }
 
@@ -89,7 +89,7 @@ exports.findUserById = function(id, returnFn){
             return returnFn({error: err, status: 500});
         else if(result)
             return returnFn({data: result[0], status: 200});
-        returnFn({error: 'No user found', status: 400});
+        returnFn({message: 'No user found', status: 400});
         
     })
 }
@@ -97,9 +97,9 @@ exports.findUserById = function(id, returnFn){
 exports.findUserByName = function(name, returnFn){
     User.find({fullName: {$regex:`^${name}`, $options:'i'}, role: 'receiver'}, function(err, result){
         if(err)
-            return returnFn({error: err});
+            return returnFn({error: err, status: 404});
         else if(result.length > 0)
             return returnFn({data: result, status: 200});
-        returnFn({error: 'No user found'});
+        returnFn({message: 'No user found', status: 404});
     })
 }

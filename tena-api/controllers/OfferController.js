@@ -8,7 +8,10 @@ exports.offerFund = function(req, res, next){
 
 exports.getOffersByProvider = function(req,res,next){
     OfferService.getOffersByProviderId(req.params.id,(results)=>{
-        res.status(results.status).json(results);
+        if(results.length)
+            res.status(results[0].status).json(results);
+        else
+            res.status(results.status).json(results);
     })
 }
 
