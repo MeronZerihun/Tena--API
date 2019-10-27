@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/Tenatest',{useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect('mongodb://localhost/TenaTest',{useNewUrlParser: true, useUnifiedTopology: true});
 var db = mongoose.connection;
 
 

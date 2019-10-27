@@ -19,7 +19,7 @@ UserService.findUsersByRole('admin',(results)=>{
                         // User account
                         BankService.addBank("MasterCard", 5940, "12387896456",(result)=>{
                             // Offer
-                            OfferService.offerFund("MasterCard", 100, "12387896456",request._id,provider.data._id,(offer)=>{
+                            OfferService.offerFund("MasterCard", 100, "12387896456",request.data._id,provider.data._id,(offer)=>{
                                
                                 
                             });
