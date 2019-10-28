@@ -21,6 +21,7 @@
     "express": "^4.17.1"
   },
   "devDependencies": {
+    "apidoc": "^0.17.7",
     "chai": "^4.2.0",
     "mocha": "^6.2.2",
     "request": "^2.88.0",
