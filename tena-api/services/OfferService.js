@@ -38,6 +38,18 @@ function addPatientToOffer(patientId, offer, returnFn){
     })
 }
 
+function addProviderToOffer(providerId, offer, returnFn){
+    UserService.findUserById(providerId, (user)=>{
+        if(user.data){
+            offer.provider = user.data;
+            returnFn(offer);
+        }
+        else
+            returnFn(user);
+            
+    })
+}
+
 exports.offerFund = function(bankType, amount, accountNo, requestId, providerId, returnFn){
     UserService.findUserById(providerId, (result)=>{
         if(!result.error || !result.message){
@@ -100,5 +112,41 @@ exports.getAllOffers = function(returnFn){
             return returnFn({data: offers, status: 200});
         else
             return returnFn({message: 'No offers found', status: 404});
+    })
+}
+
+
+exports.getOffersForPatient = function(patientId, returnFn){
+    RequestService.getRequestByPatientId(patientId, (requests)=>{
+        let newList = [];
+        if(requests.data){
+            let requestList = requests.data;
+            requestList.forEach((request)=>{
+                FundOffer.find({requestId: request._id}, function(err, result){
+                    if(err)
+                        return returnFn({error: err});
+                    else if(result.length){
+                        result.forEach((offer) => {
+                            let offerObj = {};
+                            offerObj.data = offer.toObject(); 
+                            addProviderToOffer(offer.providerId, offerObj, (newOffer)=>{
+                                if(newOffer.provider){
+                                    newOffer.status = 200;
+                                    newList.push(newOffer);
+                                    if(offer === result[result.length - 1])
+                                        returnFn(newList);
+                                }
+                                else
+                                    return returnFn(newOffer);
+                            })
+                        })
+                    }
+                    else
+                        return returnFn({message: 'No offers found for request', status: 200});
+                })
+            })
+        }
+        else
+            return returnFn(requests);
     })
 }

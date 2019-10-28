@@ -20,3 +20,12 @@ exports.getAllOffers = function(req, res, next){
         res.status(results.status).json(results);
     })
 }
+
+exports.getOffersToPatient = function(req, res, next){
+    OfferService.getOffersForPatient(req.params.id, (results)=>{
+        if(results.length)
+            res.status(results[0].status).json(results);
+        else
+            res.status(results.status).json(results);
+    })
+}

@@ -86,8 +86,8 @@ exports.blockUser = function(userId, returnFn){
 exports.findUserById = function(id, returnFn){
     User.find({_id: id}, function(err, result){
         if(err)
-            return returnFn({error: err, status: 500});
-        else if(result)
+            return returnFn({error: err, status: 400});
+        else if(result.length)
             return returnFn({data: result[0], status: 200});
         returnFn({message: 'No user found', status: 400});
         

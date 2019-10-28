@@ -268,11 +268,20 @@ exports.getRequestById = function(id, returnFn){
 }
 
 exports.getRequestByPatientId = function(patientId, returnFn){
-    FundRequest.find({patientId: patientId}, function(err, requests){
-        if(err)
-            return returnFn({error: err, status: 400});
-        else if(requests.length)
-            return returnFn({data: requests, status: 200});
-        returnFn({message: 'No requests made by this patient', status: 404});
+    UserService.findUserById(patientId, (user)=>{
+        console.log(user)
+        if(user.data){
+            FundRequest.find({patientId: patientId , status: 'pending'}, function(err, requests){
+                if(err)
+                    return returnFn({error: err, status: 400});
+                else if(requests.length)
+                    return returnFn({data: requests, status: 200});
+                returnFn({message: 'No requests made by this patient', status: 404});
+            })
+        }
+        else
+            returnFn(user)
+        
     })
+    
 }

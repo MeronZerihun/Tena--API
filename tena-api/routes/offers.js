@@ -9,4 +9,6 @@ router.get('/:id', OfferController.getOffersByProvider);
 
 router.get('/', OfferController.getAllOffers);
 
+router.get('/patients/:id', OfferController.getOffersToPatient);
+
 module.exports = router;
