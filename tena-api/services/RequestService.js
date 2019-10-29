@@ -50,7 +50,7 @@ function addOnRate(request, userId, returnFn){
             })
         }
         else{
-            returnFn({message: 'Request has already been rated by the user', status: 400});
+            returnFn({error: 'Request has already been rated by the user', status: 400});
         }
     })
 }
@@ -89,7 +89,7 @@ function requestsByPatient(results, loggedUserId, returnFn){
                                 users = users.concat(newRes);
                                 if(results[results.length-1] === result){
                                     if(users.length === 0)
-                                        return returnFn({message: 'No requests found by the user', status: 200});
+                                        return returnFn({error: 'No requests found by the user', status: 200});
                                     else
                                         return returnFn(users);
                                 }
@@ -122,7 +122,7 @@ exports.getRequestsByStatus = function(status, loggedUserId, returnFn){
         if(err)
             return returnFn({error: err, status: 500});
         else if(results.length === 0)
-            return returnFn({message: 'No such request', status: 404});
+            return returnFn({error: 'No such request', status: 404});
         else{
             addUserAndRateObj(results, loggedUserId, (results)=>{
                 returnFn(results);
@@ -139,7 +139,7 @@ exports.getRequestsByDiagnosis = function(diagnosis, loggedUserId, returnFn){
         if(err)
             return returnFn({error: err, status: 500});
         else if(results.length === 0)
-            return returnFn({message: 'No such request', status: 404});    
+            return returnFn({error: 'No such request', status: 404});    
         else{
             addUserAndRateObj(results, loggedUserId, (results)=>{
                 returnFn(results);
@@ -161,7 +161,7 @@ exports.rateRequest = function(requestId, userId, returnFn){
                     })
                 }
                 else{
-                    return returnFn({message: 'No request found', status: 404});
+                    return returnFn({error: 'No request found', status: 404});
                 }
             })
         }
@@ -184,7 +184,7 @@ exports.unrateRequest = function(requestId, userId, returnFn){
                         })
                     }
                 else
-                    returnFn({message: 'User has not rated such a request', status: 400});
+                    returnFn({error: 'User has not rated such a request', status: 400});
             });
         }
         else
@@ -206,7 +206,7 @@ exports.updateProgress = function(requestId, progressAmount, returnFn){
             });
         }
         else{
-            returnFn({message: 'No request found', status: 404});
+            returnFn({error: 'No request found', status: 404});
         }    
         
     });
@@ -217,7 +217,7 @@ exports.updateStatus = function(requestId, status, returnFn){
         if(err)
             return returnFn({error: err, status: 400});
         else if(!result)
-            return returnFn({message: 'No request found', status: 404});
+            return returnFn({error: 'No request found', status: 404});
         returnFn({data: result, status: 200});
     });
 }
@@ -227,7 +227,7 @@ exports.updateRequest = function(requestId, age, gender, maritalStatus, diagnosi
         if(err)
             return returnFn({error: err, status: 400});
         else if(!result)
-            return returnFn({message: 'No request found', status: 404});
+            return returnFn({error: 'No request found', status: 404});
         returnFn({data: result, status: 204});
     });
 }
@@ -237,7 +237,7 @@ exports.deleteRequest = function(requestId, returnFn){
             if(err)
                 return returnFn({error: err, status: 400});
             else if(!result)
-                return returnFn({message: 'No request found', status: 404});
+                return returnFn({error: 'No request found', status: 404});
             returnFn({data: result, status: 201});
     });
 }
@@ -245,13 +245,13 @@ exports.deleteRequest = function(requestId, returnFn){
 // for the search bar
 exports.getRequestByPatient = function(patientName, loggedUserId, returnFn){
     UserService.findUserByName(patientName, (results)=>{
-        if(!results.error || !results.message){
+        if(!results.error){
             requestsByPatient(results.data, loggedUserId, (reqList)=> {
                 return returnFn(reqList);
             })
         }
         else{
-            returnFn({message: 'No such patient', status: 404});
+            returnFn({error: 'No such patient', status: 404});
         }
     })
 }
@@ -263,20 +263,19 @@ exports.getRequestById = function(id, returnFn){
             return returnFn({error: err, status: 400});
         else if(results.length > 0)
             return returnFn({data: results[0], status: 200});
-        returnFn({message: 'No request found', status: 404});
+        returnFn({error: 'No request found', status: 404});
     })
 }
 
 exports.getRequestByPatientId = function(patientId, returnFn){
     UserService.findUserById(patientId, (user)=>{
-        console.log(user)
         if(user.data){
             FundRequest.find({patientId: patientId , status: 'pending'}, function(err, requests){
                 if(err)
                     return returnFn({error: err, status: 400});
                 else if(requests.length)
                     return returnFn({data: requests, status: 200});
-                returnFn({message: 'No requests made by this patient', status: 404});
+                returnFn({error: 'No requests made by this patient', status: 404});
             })
         }
         else

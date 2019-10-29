@@ -5,14 +5,14 @@ const RequestService = require('./RequestService');
 
 function debitAmountFromProvider(bankType, amount, accountNo, requestId, providerId, returnFn){
     BankService.debitAmount(bankType,amount,accountNo, (result)=>{
-        if(!result.error || !result.message){
+        if(!result.error){
             let fundOffer = new FundOffer({accountNumber: accountNo, paymentOption: bankType, fundAmount: amount, providerId: providerId, requestId: requestId});
             fundOffer.save(function(err, result){
                 if(err)
                     return returnFn({error: err, status: 400});
                 else{
                     RequestService.updateProgress(requestId,amount, (updateReq)=>{
-                            if(updateReq.error || updateReq.message){
+                            if(updateReq.error || updateReq.error){
                                 return returnFn(updateReq);
                             }
                             returnFn({data: result, status: 200});
@@ -52,9 +52,9 @@ function addProviderToOffer(providerId, offer, returnFn){
 
 exports.offerFund = function(bankType, amount, accountNo, requestId, providerId, returnFn){
     UserService.findUserById(providerId, (result)=>{
-        if(!result.error || !result.message){
+        if(!result.error){
             RequestService.getRequestById(requestId, (result)=>{
-                if(!result.error || !result.message){
+                if(!result.error || !result.error){
                     debitAmountFromProvider(bankType, amount, accountNo, requestId, providerId,(debitRes)=>{
                         returnFn(debitRes);
                     })
@@ -99,7 +99,7 @@ exports.getOffersByProviderId = function(providerId, returnFn){
             })
         }   
         else
-            returnFn({message: 'No offers found', status: 404});
+            returnFn({error: 'No offers found', status: 404});
         
     })
 }
@@ -111,7 +111,7 @@ exports.getAllOffers = function(returnFn){
         else if(offers.length > 0)
             return returnFn({data: offers, status: 200});
         else
-            return returnFn({message: 'No offers found', status: 404});
+            return returnFn({error: 'No offers found', status: 404});
     })
 }
 
@@ -142,7 +142,7 @@ exports.getOffersForPatient = function(patientId, returnFn){
                         })
                     }
                     else
-                        return returnFn({message: 'No offers found for request', status: 200});
+                        return returnFn({error: 'No offers found for request', status: 200});
                 })
             })
         }
