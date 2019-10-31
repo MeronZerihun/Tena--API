@@ -27,7 +27,7 @@ objEvent.on('addProvider', function(newOffers, offer, returnFn){
 
 objEvent.on('addRequest', function(newOffers, offer, returnFn){
     RequestService.getRequestById(offer.data.requestId, (request)=>{
-        if(request.error || request.error)
+        if(request.error)
             return returnFn(request);
         offer.request = request.data;
         objEvent.emit('addPatient', newOffers, offer, (results)=>{
@@ -38,7 +38,7 @@ objEvent.on('addRequest', function(newOffers, offer, returnFn){
 
 objEvent.on('addPatient', function(newOffers, offer, returnFn){
     UserService.findUserById(offer.request.patientId, (patient)=>{
-        if(patient.error || patient.error)
+        if(patient.error)
             return returnFn(patient);
         offer.patient = patient.data;
         offer.status = 200
@@ -69,7 +69,7 @@ objEvent.on('addUser', function(newRates, rate, returnFn){
 
 objEvent.on('addRequestToRate', function(newRates, rate, returnFn){
     RequestService.getRequestById(rate.data.requestId, (request)=>{
-        if(request.error || request.error)
+        if(request.error)
             return returnFn(request);
         rate.request = request.data;
         rate.status = 200;
@@ -96,6 +96,11 @@ function addOffersToNotifications(newRates, returnFn){
                 })
             })
         }
+        else    
+            if(newRates.length)
+                returnFn(newRates)
+            else
+                returnFn({error: 'No offer and rates found', status: 404})
     })
 
 }
@@ -112,7 +117,10 @@ exports.getNotifications = function(returnFn){
                 objEvent.emit('addUser', newRates, rate, (newRatesArr)=>{
                     if(rates[rates.length-1]===rate){
                         addOffersToNotifications(newRatesArr, (results)=>{
-                            return returnFn(results);
+                            if(results.length)
+                                return returnFn(results.sort((a,b) => (a.data.createdAt < b.data.createdAt) ? 1 : -1));
+                            else
+                                return returnFn(results);
                         })
                     }
                 })
@@ -120,12 +128,11 @@ exports.getNotifications = function(returnFn){
         }
         else{
             addOffersToNotifications(newRates, (results)=>{
-                if(results.length){
-                    results = results.sort((a,b) => 
-                        (a.data.createdAt< b.data.createdAt) ? 1 : (a.data.createdAt > b.data.createdAt) ? -1 : 0);
+                if(results.length)
+                    returnFn(results.sort((a,b) => (a.data.createdAt < b.data.createdAt) ? 1 : -1));
+                    
+                else
                     return returnFn(results);
-                }
-                return returnFn(results);
             });
         }        
     })

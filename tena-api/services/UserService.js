@@ -1,5 +1,10 @@
 var User = require('../models/User');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const values = require('../config/values');
+
+
+
 
 exports.findAllUsers = function (returnFn){
     User.find({}, function(err, res){
@@ -48,13 +53,15 @@ exports.updateAUser = function(id, newUser, returnFn){
         if(err) 
             return returnFn({error: err, status: 400}); 
         else if(result)
-            return returnFn({data: result, status: 200});
+            return returnFn({data: result, status: 204});
+        else returnFn({error: 'User not found', status: 404})
         
     });
 
 }
 
 exports.loginUser = function(email, password, returnFn){
+    
     User.find({email: email}, function(err, user){
         if(err)
             return returnFn({error: err, status: 500});
@@ -63,7 +70,13 @@ exports.loginUser = function(email, password, returnFn){
                 if(!res)
                     return returnFn({error: "Invalid email or password", status: 400});
                 else{
-                    return returnFn({data: user[0], status: 200})
+                    const token = jwt.sign(
+                        user[0].toObject(), 
+                        values.JWT_KEY,
+                        {
+                            expiresIn: '2h'
+                        });
+                    return returnFn({data: user[0], token: token, status: 200})
                 }
             })
         }
@@ -78,7 +91,7 @@ exports.blockUser = function(userId, returnFn){
         if(err)
             return returnFn({error: err, status: 500});
         else if(result)
-            returnFn({data: result, status: 200});
+            returnFn({data: result, status: 204});
         returnFn({error: "No user found", status: 404});
     })
 }

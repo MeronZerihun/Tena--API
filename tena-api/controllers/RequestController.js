@@ -4,8 +4,12 @@ exports.makeFundRequest = function(req, res, next){
     let uploads = req.files;
     console.log(req.files)
     let requestObj = req.body;
+    if(requestObj.photo)
+        requestObj.photo = uploads.photo[0].path;
+    if(requestObj.verificationFile)
+        requestObj.verificationFile = uploads.verificationFile[0].path;
     
-    RequestService.createRequest(requestObj.age,requestObj.gender, requestObj.recoveryCost, requestObj.maritalStatus, requestObj.description, uploads.photo[0].path, requestObj.diagnosis, uploads.verificationFile[0].path, requestObj.patientId,(result)=>{
+    RequestService.createRequest(requestObj, (result)=>{
         res.status(result.status).json(result);
     });
 }
@@ -67,7 +71,19 @@ exports.declineRequest = function(req, res, next){
 
 exports.editRequest = function(req, res, next){
     let uploads = req.files;
-    RequestService.updateRequest(req.params.id, req.body.age,req.body.gender,req.body.maritalStatus,req.body.diagnosis,req.body.description,req.body.cost,uploads.photo[0].filename,uploads.verificationFile[0].filename,(result)=>{
+    
+    let request = req.body;
+    if(uploads){
+        if(uploads.photo)
+            request.photo = uploads.photo[0].filename;
+        
+        if(uploads.verificationFile)
+            request.verificationFile = uploads.verificationFile[0].filename;
+        
+    }
+
+
+    RequestService.updateRequest(req.params.id, request, (result)=>{
         res.status(result.status).json(result);
     });
 }

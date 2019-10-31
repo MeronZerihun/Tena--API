@@ -222,13 +222,13 @@ exports.updateStatus = function(requestId, status, returnFn){
     });
 }
 
-exports.updateRequest = function(requestId, age, gender, maritalStatus, diagnosis, description, cost, photo, verificationFile, returnFn){
-    FundRequest.findByIdAndUpdate({_id: requestId}, {age: age, gender: gender, maritalStatus: maritalStatus, diagnosis: diagnosis, description: description, photo: photo, verificationFile: verificationFile, recoveryCost: cost}, {new: true}, function(err, result){
+exports.updateRequest = function(requestId, request, returnFn){
+    FundRequest.findByIdAndUpdate({_id: requestId}, request, {new: true}, function(err, result){
         if(err)
             return returnFn({error: err, status: 400});
         else if(!result)
             return returnFn({error: 'No request found', status: 404});
-        returnFn({data: result, status: 204});
+        returnFn({data: result, status: 200});
     });
 }
 

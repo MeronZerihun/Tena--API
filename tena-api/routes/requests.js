@@ -37,11 +37,12 @@ const storage = multer.diskStorage({
 })
 
 const uploads = multer({storage: storage});
-//const fileUploads = multer({dest: './tena-uploads/ver-files/'}); 
 
 var RequestController = require('../controllers/RequestController');
+const AuthController = require('../controllers/AuthController');
 
-router.post('/new', uploads.fields([{name: 'photo', maxCount: 1},{name: 'verificationFile', maxCount: 1}]), RequestController.makeFundRequest);
+
+router.post('/new', AuthController.verifyToken, uploads.fields([{name: 'photo', maxCount: 1},{name: 'verificationFile', maxCount: 1}]), RequestController.makeFundRequest);
 
 router.get('/pending', RequestController.getPendingRequest);
 
@@ -49,25 +50,25 @@ router.get('/accepted', RequestController.getAcceptedRequest);
 
 router.get('/declined', RequestController.getDeclinedRequest);
 
-router.get('/diagnosis', RequestController.getRequestsByDiagnosis);
+router.get('/diagnosis', AuthController.verifyToken, RequestController.getRequestsByDiagnosis);
 
-router.get('/rate',RequestController.rateRequest);
+router.put('/rate', AuthController.verifyToken, RequestController.rateRequest);
 
-router.get('/unrate',RequestController.unrateRequest);
+router.put('/unrate',AuthController.verifyToken, RequestController.unrateRequest);
 
-router.put('/updateRequest/:id', uploads.fields([{name: 'photo', maxCount: 1},{name: 'verificationFile', maxCount: 1}]), RequestController.editRequest);
+router.put('/updateRequest/:id', uploads.fields([{name: 'photo', maxCount: 1},{name: 'verificationFile', maxCount: 1}]), AuthController.verifyToken, RequestController.editRequest);
 
-router.put('/updateProgress/:id', RequestController.updateProgress);
+router.put('/updateProgress/:id', AuthController.verifyToken, RequestController.updateProgress);
 
-router.put('/updateStatus/accept/:id', RequestController.acceptRequest);
+router.put('/updateStatus/accept/:id', AuthController.verifyToken, RequestController.acceptRequest);
 
-router.put('/updateStatus/decline/:id', RequestController.declineRequest);
+router.put('/updateStatus/decline/:id', AuthController.verifyToken, RequestController.declineRequest);
 
-router.put('/delete/:id', RequestController.deleteRequest);
+router.put('/delete/:id', AuthController.verifyToken, RequestController.deleteRequest);
 
-router.get('/search/:name', RequestController.searchRequestByPatientName);
+router.get('/search/:name', AuthController.verifyToken, RequestController.searchRequestByPatientName);
 
-router.get('/patients', RequestController.getRequestsByPatientId);
+router.get('/patients', AuthController.verifyToken, RequestController.getRequestsByPatientId);
 
 
 module.exports = router; 
