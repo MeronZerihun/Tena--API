@@ -4,7 +4,29 @@ const jwt = require('jsonwebtoken');
 const values = require('../config/values');
 
 
+function hashPassword(password, user, returnFn){
+    bcrypt.hash(password, 10 , (err, hash)=>{
+        if(err){
+            returnFn({error: "No password field provided", status: 400});
+        }
+        else{
+            user.password = hash;
+            returnFn(user);
+        }
+    })
+}
 
+function updateUser(id, user, returnFn){
+    User.findByIdAndUpdate({_id: id}, user,{new: true}, function(err, result){
+        if(err) 
+            returnFn({error: err, status: 400}); 
+        else if(result)
+            returnFn({data: result, status: 204});
+        
+        else returnFn({error: 'User not found', status: 404})
+        
+    });
+}
 
 exports.findAllUsers = function (returnFn){
     User.find({}, function(err, res){
@@ -49,19 +71,21 @@ exports.insertUser = function (fullName, email, phoneNo, password, role, returnF
 }
 
 exports.updateAUser = function(id, newUser, returnFn){
-    User.findByIdAndUpdate({_id: id}, newUser,{new: true}, function(err, result){
-        if(err) 
-            return returnFn({error: err, status: 400}); 
-        else if(result)
-            return returnFn({data: result, status: 204});
-        else returnFn({error: 'User not found', status: 404})
-        
-    });
+    if(newUser.password != null){
+       hashPassword(newUser.password, newUser, (updatedUser)=>{
+            updateUser(id, updatedUser, (result)=>{
+                returnFn(result);
+            });
+       })
+    }
+    else
+        updateUser(id, newUser, (result)=>{
+            returnFn(result);
+        });
 
 }
 
 exports.loginUser = function(email, password, returnFn){
-    
     User.find({email: email}, function(err, user){
         if(err)
             return returnFn({error: err, status: 500});

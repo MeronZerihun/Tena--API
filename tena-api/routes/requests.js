@@ -56,7 +56,7 @@ router.put('/rate', AuthController.verifyToken, RequestController.rateRequest);
 
 router.put('/unrate',AuthController.verifyToken, RequestController.unrateRequest);
 
-router.put('/updateRequest/:id', uploads.fields([{name: 'photo', maxCount: 1},{name: 'verificationFile', maxCount: 1}]), AuthController.verifyToken, RequestController.editRequest);
+router.put('/updateRequest/:id', AuthController.verifyToken, uploads.fields([{name: 'photo', maxCount: 1},{name: 'verificationFile', maxCount: 1}]), RequestController.editRequest);
 
 router.put('/updateProgress/:id', AuthController.verifyToken, RequestController.updateProgress);
 

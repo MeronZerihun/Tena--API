@@ -13,7 +13,6 @@ exports.verifyToken = function(req, res, next){
                 res.sendStatus(403);
             }
             else{
-                //console.log(AuthData.user)
                 req.userId = AuthData._id;
                 next();
             }

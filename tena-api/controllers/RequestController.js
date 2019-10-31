@@ -15,38 +15,38 @@ exports.makeFundRequest = function(req, res, next){
 }
 
 exports.getPendingRequest = function(req, res, next){
-    RequestService.getRequestsByStatus('pending', req.body.userId,(result)=>{
+    RequestService.getRequestsByStatus('pending', req.userId,(result)=>{
         res.status(result.status).json(result);
     })
 }
 
 exports.getAcceptedRequest = function(req, res, next){
-    RequestService.getRequestsByStatus('accepted', req.body.userId, (result)=>{
+    RequestService.getRequestsByStatus('accepted', req.userId, (result)=>{
         res.status(result.status).json(result);
     })
 }
 
 exports.getDeclinedRequest = function(req, res, next){
-    RequestService.getRequestsByStatus('declined', req.body.userId, (result)=>{
+    RequestService.getRequestsByStatus('declined', req.userId, (result)=>{
         res.status(result.status).json(result);
     })
 }
 
 exports.getRequestsByDiagnosis = function(req, res, next){
-    RequestService.getRequestsByDiagnosis(req.body.diagnosis, req.body.userId, (result)=>{
+    RequestService.getRequestsByDiagnosis(req.body.diagnosis, req.userId, (result)=>{
         res.status(result.status).json(result);
     })
 }
 
 exports.rateRequest = function(req,res, next){
-    RequestService.rateRequest(req.body.requestId, req.body.userId, (result)=>{
+    RequestService.rateRequest(req.body.requestId, req.userId, (result)=>{
         res.status(result.status).json(result);
     })
 }
 
 
 exports.unrateRequest = function(req,res, next){
-    RequestService.unrateRequest(req.body.requestId, req.body.userId, (result)=>{
+    RequestService.unrateRequest(req.body.requestId, req.userId, (result)=>{
         res.status(result.status).json(result);
     })
 }
@@ -95,7 +95,7 @@ exports.deleteRequest = function(req, res, next){
 }
 
 exports.searchRequestByPatientName = function(req, res, next){
-    RequestService.getRequestByPatient(req.params.name, req.body.userId, (result)=>{
+    RequestService.getRequestByPatient(req.params.name, req.userId, (result)=>{
         if(result.length)
             res.status(result[0].status).json(result);
         else
@@ -104,7 +104,7 @@ exports.searchRequestByPatientName = function(req, res, next){
 }
 
 exports.getRequestsByPatientId = function(req, res, next){
-    RequestService.getRequestByPatientId(req.body.patientId, (requests)=>{
+    RequestService.getRequestByPatientId(req.userId, (requests)=>{
         res.status(requests.status).json(requests);
         
     })

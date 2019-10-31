@@ -292,7 +292,7 @@ router.get('/:role', UserController.getUsersByRole);
  * 
  * 
  */
-router.put('/updateAccount/', AuthController.verifyToken, UserController.updateUser);
+router.put('/updateAccount', AuthController.verifyToken, UserController.updateUser);
 
 /**
  * @api {put} /block/:id Block user

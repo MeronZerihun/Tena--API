@@ -74,7 +74,7 @@ const AuthController = require('../controllers/AuthController');
 router.post('/fund', AuthController.verifyToken, OfferController.offerFund);
 
 /**
- * @api {get}  /:id Get offers by a provider
+ * @api {get}  / Get offers by a provider
  * @apiName GetOffersByProvider
  * @apiGroup Offers
  * 
@@ -129,7 +129,7 @@ router.post('/fund', AuthController.verifyToken, OfferController.offerFund);
  * 
  * 
  **/
-router.get('/:id', OfferController.getOffersByProvider);
+router.get('/', OfferController.getOffersByProvider);
 
 /**
  * @api {get}  / Get all offers
@@ -176,7 +176,7 @@ router.get('/:id', OfferController.getOffersByProvider);
  * 
  * 
  **/
-router.get('/', OfferController.getAllOffers);
+router.get('/all', OfferController.getAllOffers);
 /**
  * @api {get}  /patient/:id Get offers for a patient
  * @apiName GetOffersToPatient
@@ -248,6 +248,6 @@ router.get('/', OfferController.getAllOffers);
  * 
  **/
 
-router.get('/patients/:id', AuthController.verifyToken, OfferController.getOffersToPatient);
+router.get('/patients', AuthController.verifyToken, OfferController.getOffersToPatient);
 
 module.exports = router;
