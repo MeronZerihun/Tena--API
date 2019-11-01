@@ -69,7 +69,7 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-const PORT = process.env.port || 300;
+const PORT = process.env.port || 3000;
 app.listen( PORT, ()=>{
   console.log(`Listening on ${PORT}`);
 })
