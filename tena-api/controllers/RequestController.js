@@ -2,14 +2,9 @@ const RequestService = require('../services/RequestService');
 
 exports.makeFundRequest = function(req, res, next){
     let uploads = req.files;
-    console.log(req.files)
     let requestObj = req.body;
-    if(requestObj.photo)
-        requestObj.photo = uploads.photo[0].path;
-    if(requestObj.verificationFile)
-        requestObj.verificationFile = uploads.verificationFile[0].path;
     
-    RequestService.createRequest(requestObj, (result)=>{
+    RequestService.createRequest(requestObj.age, requestObj.gender, requestObj.cost, requestObj.maritalStatus, requestObj.description, uploads.photo[0].path, requestObj.diagnosis, uploads.verificationFile[0].path, req.userId, (result)=>{
         res.status(result.status).json(result);
     });
 }
@@ -75,10 +70,10 @@ exports.editRequest = function(req, res, next){
     let request = req.body;
     if(uploads){
         if(uploads.photo)
-            request.photo = uploads.photo[0].filename;
+            request.photo = uploads.photo[0].path;
         
         if(uploads.verificationFile)
-            request.verificationFile = uploads.verificationFile[0].filename;
+            request.verificationFile = uploads.verificationFile[0].path;
         
     }
 

@@ -13,7 +13,6 @@ const AuthController = require('../controllers/AuthController');
  * @apiParam {Number} amount amount of money to be funded
  * @apiParam {String} accountNo phone number of the user 
  * @apiParam {String} requestId id of the request to be funded 
- * @apiParam {String} providerId id of the provider of the fund
  *
  * @apiSuccess {Object} data Contains the new offer object.
  * @apiSuccess {Number} status  Contains the status of the request.
@@ -78,7 +77,6 @@ router.post('/fund', AuthController.verifyToken, OfferController.offerFund);
  * @apiName GetOffersByProvider
  * @apiGroup Offers
  * 
- * @apiParam {String} id id of the provider of a fund
  *
  * @apiSuccess {Object} data Contains the new offer object.
  * @apiSuccess {Number} status  Contains the status of the request.
@@ -132,7 +130,7 @@ router.post('/fund', AuthController.verifyToken, OfferController.offerFund);
 router.get('/', OfferController.getOffersByProvider);
 
 /**
- * @api {get}  / Get all offers
+ * @api {get}  /all Get all offers
  * @apiName GetAllOffers
  * @apiGroup Offers
  * 

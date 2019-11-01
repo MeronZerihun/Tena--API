@@ -252,8 +252,6 @@ router.get('/:role', UserController.getUsersByRole);
  * @apiName UpdateUser
  * @apiGroup Users
  * 
- * @apiParam {id} id user's id
- *
  * 
  * @apiSuccessExample Success-Response:
  * 
@@ -299,7 +297,7 @@ router.put('/updateAccount', AuthController.verifyToken, UserController.updateUs
  * @apiName BlockUser
  * @apiGroup Users
  *
- * @apiParam {id} id user's id
+ * @apiParam {String} id user's id to be blocked
  *
  * 
  * @apiSuccessExample Success-Response:
