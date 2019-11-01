@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const values = require('../config/values');
 
-
+console.log(values.MONGO_URL);
 mongoose.connect(values.MONGO_URL, {useNewUrlParser: true, useUnifiedTopology: true});
 var db = mongoose.connection;
 
