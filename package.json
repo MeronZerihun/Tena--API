@@ -4,7 +4,7 @@
   "description": "API for the Tena project",
   "main": "index.js",
   "scripts": {
-    "start": "node ./tena--api/bin/www"
+    "start": "node ./tena-api/bin/www"
   },
   "repository": {
     "type": "git",
