@@ -54,7 +54,7 @@ app.use('/notifications', notificationsRouter);
 app.use('/tena-uploads', express.static('tena-uploads'));
 
 app.get('*', function(req,res){
-  res.status(404).json({error: 'this route is not defined'});
+  res.status(404).json({error: 'Route not found'});
 })
 
 // error handler
@@ -64,8 +64,7 @@ app.use(function(err, req, res, next) {
   res.locals.error = req.app.get('env') === 'development' ? err : {error: 'this route is not defined'};
 
   // render the error page
-  res.status(err.status || 500).json({error: 'this route is not defined'});
-  //res.render('error');
+  res.status(err.status || 500).json({error: 'Server error'});
 });
 
 
