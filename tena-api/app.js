@@ -62,7 +62,7 @@ app.use(function(err, req, res, next) {
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   // render the error page
-  res.status(err.status || 500).json('this route is not defined');
+  res.status(err.status || 500).json({error: 'this route is not defined'});
   //res.render('error');
 });
 
