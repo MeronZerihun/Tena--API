@@ -71,7 +71,7 @@ exports.insertUser = function (fullName, email, phoneNo, password, role, returnF
 }
 
 exports.updateAUser = function(id, newUser, returnFn){
-    if(newUser.password != null){
+    if(newUser.password != null || newUser.password != undefined){
        hashPassword(newUser.password, newUser, (updatedUser)=>{
             updateUser(id, updatedUser, (result)=>{
                 returnFn(result);

@@ -59,7 +59,7 @@ var UserController = require('../controllers/UserController');
  * 
  * 
  */
-router.get('/',  UserController.getAllOrByUsername);
+router.get('/', AuthController.verifyToken,  UserController.getAllOrByUsername);
 
 /**
  * @api {post}  /signup Signup users 
