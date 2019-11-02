@@ -53,7 +53,9 @@ app.use('/notifications', notificationsRouter);
 
 app.use('/tena-uploads', express.static('tena-uploads'));
 
-
+app.get('*', function(req,res){
+  res.status(404).json({error: 'this route is not defined'});
+})
 
 // error handler
 app.use(function(err, req, res, next) {
