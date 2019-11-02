@@ -59,7 +59,7 @@ app.use('/tena-uploads', express.static('tena-uploads'));
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+  res.locals.error = req.app.get('env') === 'development' ? err : {error: 'this route is not defined'};
 
   // render the error page
   res.status(err.status || 500).json({error: 'this route is not defined'});
