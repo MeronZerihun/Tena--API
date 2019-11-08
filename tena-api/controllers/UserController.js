@@ -60,7 +60,7 @@ exports.updateUser = function(req,res, next){
 }
 
 exports.blockUser = function(req, res, next){
-    UserService.blockUser(req.params.id, (user)=>{
+    UserService.blockUser(req.params.id, (result)=>{
         res.status(result.status).json(result);
     })
 }
